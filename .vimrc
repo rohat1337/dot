@@ -1,0 +1,142 @@
+syntax on
+filetype plugin on
+filetype indent on
+set nocompatible
+filetype on
+set hlsearch
+set ignorecase
+set number
+set timeoutlen=100
+set laststatus=2
+
+let mapleader = ","
+call plug#begin()
+Plug 'sainnhe/everforest'
+Plug 'romainl/vim-cool'
+Plug 'vim-airline/vim-airline'
+Plug 'liuchengxu/vim-which-key'
+Plug 'mattn/vim-lsp-settings'
+Plug 'prabirshrestha/vim-lsp'
+Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
+Plug 'mhinz/vim-startify'
+Plug 'junegunn/fzf'
+Plug 'junegunn/fzf.vim'
+Plug 'shaoran/vim-ruff'
+" {{{
+  let g:fzf_nvim_statusline = 0 " disable statusline overwriting
+
+  nnoremap <silent> <leader><space> :Files<CR>
+" }}}
+Plug 'ryanoasis/vim-devicons'
+call plug#end()
+
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <cr>    pumvisible() ? asyncomplete#close_popup() : "\<cr>"
+autocmd InsertLeave * write 
+let &t_SI = "\e[6 q"
+let &t_EI = "\e[2 q"
+
+" reset the cursor on start (for older versions of vim, usually not required)
+augroup myCmds
+au!
+autocmd VimEnter * silent !echo -ne "\e[2 q"
+augroup END
+let g:which_key_map = {}
+let g:which_key_map['w'] = {
+      \ 'name' : '+windows' ,
+      \ 'w' : ['<C-W>w'     , 'other-window']          ,
+      \ 'd' : ['<C-W>c'     , 'delete-window']         ,
+      \ '2' : ['<C-W>v'     , 'layout-double-columns'] ,
+      \ 'h' : ['<C-W>h'     , 'window-left']           ,
+      \ 'j' : ['<C-W>j'     , 'window-below']          ,
+      \ 'l' : ['<C-W>l'     , 'window-right']          ,
+      \ 'k' : ['<C-W>k'     , 'window-up']             ,
+      \ 'H' : ['<C-W>5<'    , 'expand-window-left']    ,
+      \ 'J' : [':resize +5'  , 'expand-window-below']   ,
+      \ 'L' : ['<C-W>5>'    , 'expand-window-right']   ,
+      \ 'K' : [':resize -5'  , 'expand-window-up']      ,
+      \ '=' : ['<C-W>='     , 'balance-window']        ,
+      \ 's' : ['<C-W>s'     , 'split-window-below']    ,
+      \ 'v' : ['<C-W>v'     , 'split-window-right']    ,
+      \ 'b' : [':e#'     , 'previous window']    ,
+      \ }
+let g:which_key_map['t'] = {
+      \ 'name' : '+tabs' ,
+      \ 'n' : [':tabnew'       , 'new-tab']           ,
+      \ 'c' : [':tabclose'     , 'close-tab']         ,
+      \ 'o' : [':tabonly'      , 'close-other-tabs']  ,
+      \ 'h' : [':tabprevious'  , 'previous-tab']      ,
+      \ 'l' : [':tabnext'      , 'next-tab']          ,
+      \ 'f' : [':tabfirst'     , 'first-tab']         ,
+      \ 'F' : [':tablast'      , 'last-tab']          ,
+      \ 'm' : [':tabmove'      , 'move-tab']          ,
+      \ '1' : [':tabnext 1'    , 'go-to-tab-1']       ,
+      \ '2' : [':tabnext 2'    , 'go-to-tab-2']       ,
+      \ '3' : [':tabnext 3'    , 'go-to-tab-3']       ,
+      \ '4' : [':tabnext 4'    , 'go-to-tab-4']       ,
+      \ '5' : [':tabnext 5'    , 'go-to-tab-5']       ,
+      \ '6' : [':tabnext 6'    , 'go-to-tab-6']       ,
+      \ '7' : [':tabnext 7'    , 'go-to-tab-7']       ,
+      \ '8' : [':tabnext 8'    , 'go-to-tab-8']       ,
+      \ '9' : [':tabnext 9'    , 'go-to-tab-9']       ,
+      \ }
+let g:which_key_map['l'] = {
+      \ 'name' : '+Lsp' ,
+      \ 'h' : [':LspHover', 'hover'] ,
+      \ 'd' : [':LspDefinition', 'definition'] ,
+      \ 'r' : [':LspReferences', 'references'] ,
+      \}
+let g:which_key_map['c'] = {
+	\ 'name' : '+Quickfix' ,
+	\ 'c' : [':cclose', 'close'] ,
+	\ 'o' : [':copen', 'open'] ,
+	\ 'p' : [':cprevious', 'previous'] ,
+	\ 'n' : [':cnext', 'next'] ,
+	\}
+let g:which_key_use_floating_win = '1'
+let g:which_key_floating_opts = { 'width': '100', 'col': '100'}
+let g:which_key_max_size = '10'
+let g:which_key_sep = '->'
+call which_key#register(',', "g:which_key_map")
+inoremap " ""<left>
+inoremap ' ''<left>
+inoremap ( ()<left>
+inoremap [ []<left>
+inoremap { {}<left>
+inoremap {<CR> {<CR>}<ESC>O
+inoremap {;<CR> {<CR>};<ESC>O
+nnoremap <silent> , :WhichKey ','<CR>
+  " Important!!
+        if has('termguicolors')
+          set termguicolors
+        endif
+
+        " For dark version.
+        set background=dark
+
+        " For light version.
+        " Set contrast.
+        " This configuration option should be placed before `colorscheme everforest`.
+        " Available values: 'hard', 'medium'(default), 'soft'
+        let g:everforest_background = 'hard'
+
+        " For better performance
+        let g:everforest_better_performance = 1
+
+        colorscheme everforest
+noremap <leader>g :Rg<cr>
+let g:airline#extensions#tabline#formatter = 'jsformatter'
+
+set encoding=utf-8
+set termencoding=utf-8
+set fileencoding=utf-8
+set fileencodings=utf-8
+let g:airline_powerline_fonts = 1
+augroup AutoRuff
+  autocmd!
+  autocmd FileType python autocmd InsertLeave <buffer> Ruff
+augroup END
+
+
